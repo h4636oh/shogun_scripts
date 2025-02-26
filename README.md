@@ -1,6 +1,6 @@
 # Shogun Scripts
 
-A powerful script management and execution tool that allows you to run multiple scripts simultaneously while monitoring their progress and output.
+🚀 Shogun Scripts - A modern GUI tool for batch script execution and monitoring. Run multiple scripts simultaneously, track their progress in real-time, and export detailed PDF reports. Supports Python, Shell, Perl, Ruby, JS, and PHP scripts. Built with PySide6.
 
 ## Features
 
@@ -121,4 +121,3 @@ If you encounter any issues or have questions:
 
 - Open an issue on GitHub
 - Contact: <h4636oh@tuta.io>
-- 
