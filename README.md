@@ -25,17 +25,6 @@ A powerful script management and execution tool that allows you to run multiple 
 
 ### Linux
 
-#### Option 1: Using .deb package (Recommended for Debian/Ubuntu)
-
-Download the latest .deb package:
-wget <https://github.com/h4636oh/shogun_scripts/releases/latest/download/shogunscripts_1.0-1.deb>
-
-Install the package:
-sudo dpkg -i shogunscripts_1.0-1.deb
-sudo apt-get install -f  # Install any missing dependencies
-
-#### Option 2: Manual Installation
-
 1. Clone the repository:
    git clone <https://github.com/h4636oh/shogun_scripts.git>
    cd shogun_scripts
@@ -57,14 +46,6 @@ After installation, you can:
 
 ### Windows
 
-#### Option 1: Using Installer (Recommended)
-
-1. Download the latest installer from the releases page
-2. Run the installer (ShogunScripts-Setup.exe)
-3. Follow the installation wizard
-
-#### Option 2: Portable Version
-
 1. Download the latest zip file from releases
 2. Extract the zip file
 3. Run ShogunScripts.exe from the extracted folder
@@ -82,7 +63,7 @@ After installation, you can:
    - Select multiple scripts to run
 
 3. **Run Scripts**
-   - Click "Run Selected" to execute scripts
+   - Click "Continue" to execute scripts
    - Monitor progress in real-time
    - View outputs as they are generated
 
@@ -95,18 +76,13 @@ After installation, you can:
 
 ### Linux Uninstallation
 
-If installed via .deb package:
-sudo dpkg -r shogunscripts
-
-If installed manually:
 sudo rm -f /usr/local/bin/ShogunScripts
 sudo rm -f /usr/share/applications/shogunscripts.desktop
 sudo rm -f /usr/share/icons/hicolor/256x256/apps/shogunscripts.png
 
 ### Windows Uninstallation
 
-- Use Windows Settings > Apps > Apps & features
-- Or use Control Panel > Programs > Uninstall a program
+- Delete the ShogunScripts folder from your system
 
 ## Requirements
 
@@ -144,4 +120,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you encounter any issues or have questions:
 
 - Open an issue on GitHub
-- Contact: <mailto:h4636oh@tuta.io>
+- Contact: <h4636oh@tuta.io>
+- 
