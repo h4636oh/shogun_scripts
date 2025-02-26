@@ -26,20 +26,34 @@
 ### Linux
 
 1. Clone the repository:
-   git clone <https://github.com/h4636oh/shogun_scripts.git>
+
+    ```bash
+    git clone https://github.com/h4636oh/shogun_scripts.git
+    ```
 
 2. Navigate to the repository:
-   cd shogun_scripts
+
+    ```bash
+    cd shogun_scripts
+    ```
 
 3. Install dependencies:
-   pip install -r requirements.txt
+
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 4. Build the application:
-   pyinstaller app.spec
+
+    ```bash
+    pyinstaller app.spec
+    ```
 
 5. Install the application:
-   sudo chmod +x install.sh
-   sudo ./install.sh
+
+    ```bash
+    sudo ./install.sh
+    ```
 
 After installation, you can:
 
@@ -78,9 +92,11 @@ After installation, you can:
 
 ### Linux Uninstallation
 
+```bash
 sudo rm -f /usr/local/bin/ShogunScripts
 sudo rm -f /usr/share/applications/shogunscripts.desktop
 sudo rm -f /usr/share/icons/hicolor/256x256/apps/shogunscripts.png
+```
 
 ### Windows Uninstallation
 
@@ -97,13 +113,22 @@ sudo rm -f /usr/share/icons/hicolor/256x256/apps/shogunscripts.png
 To set up the development environment:
 
 1. Clone the repository:
-   git clone <https://github.com/h4636oh/shogun_scripts.git>
+
+   ```bash
+   git clone https://github.com/h4636oh/shogun_scripts.git
+   ```
 
 2. Install development dependencies:
+
+   ```bash
    pip install -r requirements.txt
+   ```
 
 3. Run the application:
+
+   ```bash
    python main.py
+   ```
 
 ## Contributing
 
