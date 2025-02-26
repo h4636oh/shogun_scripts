@@ -13,7 +13,7 @@ class ScriptsSelection(QWidget):
         self.folder_path = folder_path
 
         # Define supported script extensions
-        self.script_extensions = ["*.sh", "*.bash", "*.py", "*.pl", "*.rb", "*.js", "*.php"]
+        self.script_extensions = ["*.sh", "*.bash", "*.py", "*.pl", "*.rb", "*.js", "*.php", "*.ps1"]
 
         # Create main layout
         layout = QVBoxLayout(self)

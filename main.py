@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QStackedWidget
+from PySide6.QtCore import Qt, QCoreApplication
 from ui_functions.homepage import HomePage
-from PySide6.QtCore import Qt
 import ui.resources_rc
 from PySide6.QtWidgets import QStyleFactory
 from ui.theme_manager import ThemeManager
@@ -9,8 +9,13 @@ from ui_functions.style_watcher import StylesheetWatcher
 import os
 from PySide6.QtGui import QIcon
 
-# Set application info
+# Set OpenGL attribute before creating QApplication
+QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
+
+# Create application instance
 app = QApplication(sys.argv)
+
+# Set application info
 app.setApplicationName("Shogun Scripts")
 app.setApplicationDisplayName("Shogun Scripts")
 app.setOrganizationName("h4636oh")  # Optional
@@ -20,9 +25,6 @@ app.setOrganizationDomain("github.com/h4636oh")  # Optional
 icon_path = os.path.join("ui", "icons", "app", "app.png")
 if os.path.exists(icon_path):
     app.setWindowIcon(QIcon(icon_path))
-
-# Ensure resources are loaded before creating QApplication
-QApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
 
 class MainWindow(QMainWindow):
     def __init__(self):

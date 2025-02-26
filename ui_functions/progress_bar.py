@@ -25,7 +25,8 @@ class ProgressBar(QWidget):
             '.rb': 'ruby',
             '.pl': 'perl',
             '.php': 'php',
-            '.js': 'node'
+            '.js': 'node',
+            '.ps1': 'pwsh'  # 'powershell' on Windows, 'pwsh' on Linux/cross-platform
         }
 
         # Create log directory

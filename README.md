@@ -20,6 +20,7 @@
 - Ruby (.rb)
 - JavaScript (.js)
 - PHP (.php)
+- PowerShell (.ps1)
 
 ## Installation
 
