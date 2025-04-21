@@ -119,7 +119,7 @@ class ProgressBar(QWidget):
 
         current_file = self.selected_files[self.current_index]
         filename = os.path.basename(current_file)
-        filename_without_ext = os.path.splitext(filename)[0]  # Remove extension
+        filename_without_ext = os.path.splitext(filename)[0]
         self.ui.filename_lbl.setText(f"Processing: {filename_without_ext}")
         
         try:
@@ -131,6 +131,7 @@ class ProgressBar(QWidget):
             
             # Create log file path
             log_file = os.path.join(self.log_dir, f"{filename_without_ext}.log")
+            exit_code_file = os.path.join(self.log_dir, f"{filename_without_ext}.exitcode")
             
             # Execute the script with the appropriate interpreter and capture output
             with open(log_file, 'w') as f:
@@ -147,7 +148,11 @@ class ProgressBar(QWidget):
                     f.write(line)
                     f.flush()
                 
-                self.current_process.wait()  # Wait for the process to complete
+                exit_code = self.current_process.wait()  # Wait for the process to complete
+                
+                # Store exit code in a separate file
+                with open(exit_code_file, 'w') as ec:
+                    ec.write(str(exit_code))
 
             # Update progress
             self.current_index += 1
@@ -159,7 +164,9 @@ class ProgressBar(QWidget):
 
         except Exception as e:
             self.ui.filename_lbl.setText(f"Error processing {filename_without_ext}: {str(e)}")
-            # Log the error
-            log_file = os.path.join(self.log_dir, f"{filename_without_ext}_error.log")
-            with open(log_file, 'w') as f:
+            # Log the error and set exit code
+            error_log = os.path.join(self.log_dir, f"{filename_without_ext}_error.log")
+            with open(error_log, 'w') as f:
                 f.write(str(e))
+            with open(exit_code_file, 'w') as ec:
+                ec.write("1")  # Error exit code

@@ -21,6 +21,7 @@ a = Analysis(
         ('ui/icons/app/*', 'ui/icons/app'), # App icons
         ('ui_functions/*.py', 'ui_functions'), # UI function modules
         ('ui/style.qss', 'ui'),            # Explicit style.qss inclusion
+        ('fonts/*.ttf', 'fonts'),          # Add fonts
     ],
     hiddenimports=[
         # PySide6 core components

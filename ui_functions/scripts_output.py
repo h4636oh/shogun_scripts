@@ -7,6 +7,17 @@ import re
 import datetime
 import ui.resources_rc
 from fpdf import FPDF  # Using FPDF instead of reportlab
+import sys
+
+def get_font_path(font_name):
+    """Get the path to a font file, handling both development and bundled environments"""
+    # Try bundled path first
+    if hasattr(sys, '_MEIPASS'):
+        font_path = os.path.join(sys._MEIPASS, 'fonts', font_name)
+    else:
+        # Development path
+        font_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'fonts', font_name)
+    return font_path
 
 class ScriptsOutput(QWidget):
     def __init__(self, log_dir):
@@ -82,20 +93,31 @@ class ScriptsOutput(QWidget):
         for log_file in sorted(log_files):
             if log_file.endswith('_error.log'):
                 continue  # Skip error logs as they're handled with main logs
-                
+            
             # Create item for the script
             script_name = os.path.splitext(log_file)[0]
             name_item = QStandardItem(script_name)
             
-            # Check if there's an error log
-            error_log = f"{script_name}_error.log"
+            # Check exit code file
+            exit_code_file = os.path.join(self.log_dir, f"{script_name}.exitcode")
             status_item = QStandardItem()
-            if os.path.exists(os.path.join(self.log_dir, error_log)):
-                status_item.setText("Error")
-                status_item.setForeground(Qt.red)
+            
+            if os.path.exists(exit_code_file):
+                try:
+                    with open(exit_code_file, 'r') as f:
+                        exit_code = int(f.read().strip())
+                    if exit_code == 0:
+                        status_item.setText("Success")
+                        status_item.setForeground(Qt.green)
+                    else:
+                        status_item.setText("Failed")
+                        status_item.setForeground(Qt.red)
+                except (ValueError, IOError):
+                    status_item.setText("Failed")
+                    status_item.setForeground(Qt.red)
             else:
-                status_item.setText("Success")
-                status_item.setForeground(Qt.green)
+                status_item.setText("Failed")
+                status_item.setForeground(Qt.red)
             
             # Add a placeholder child item
             placeholder = QStandardItem("")
@@ -223,24 +245,30 @@ class ScriptsOutput(QWidget):
             return  # User cancelled
 
         try:
-            # Create PDF
+            # Create PDF with Unicode support
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_font("Arial", size=16)
+            
+            # Add Unicode font support
+            pdf.add_font('DejaVu', '', get_font_path('DejaVuSansCondensed.ttf'), uni=True)
+            pdf.add_font('DejaVu', 'B', get_font_path('DejaVuSansCondensed-Bold.ttf'), uni=True)
+            
+            # Set default font
+            pdf.set_font("DejaVu", size=16)
             
             # Add title
             pdf.cell(200, 10, txt="Script Execution Report", ln=1, align='C')
-            pdf.set_font("Arial", size=10)
+            pdf.set_font("DejaVu", size=10)
             pdf.cell(200, 10, txt=f"Generated on: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=1, align='C')
             pdf.ln(10)
 
             # Add summary table
-            pdf.set_font("Arial", 'B', 12)
+            pdf.set_font("DejaVu", 'B', 12)
             pdf.cell(100, 10, "Script", 1)
             pdf.cell(90, 10, "Status", 1)
             pdf.ln()
             
-            pdf.set_font("Arial", size=10)
+            pdf.set_font("DejaVu", size=10)
             for row in range(self.model.rowCount()):
                 script_name = self.model.item(row, 0).text()
                 status = self.model.item(row, 1).text()
@@ -251,14 +279,14 @@ class ScriptsOutput(QWidget):
             pdf.ln(10)
             
             # Add detailed output for each script
-            pdf.set_font("Arial", 'B', 12)
+            pdf.set_font("DejaVu", 'B', 12)
             for row in range(self.model.rowCount()):
                 script_name = self.model.item(row, 0).text()
                 status = self.model.item(row, 1).text()
                 
                 # Add script header
                 pdf.cell(200, 10, f"Script: {script_name} ({status})", ln=1)
-                pdf.set_font("Courier", size=9)
+                pdf.set_font("DejaVu", size=9)
                 
                 # Get script output
                 log_file = os.path.join(self.log_dir, f"{script_name}.log")
@@ -267,31 +295,37 @@ class ScriptsOutput(QWidget):
                 # Add output content
                 try:
                     if os.path.exists(log_file):
-                        with open(log_file, 'r') as f:
+                        with open(log_file, 'r', encoding='utf-8') as f:
                             output = f.read().strip()
                             if output:
+                                # Handle potential Unicode characters
+                                output = output.encode('latin-1', 'replace').decode('latin-1')
                                 pdf.multi_cell(0, 5, output)
                                 pdf.ln(5)
                     
                     if os.path.exists(error_log):
-                        with open(error_log, 'r') as f:
+                        with open(error_log, 'r', encoding='utf-8') as f:
                             error = f.read().strip()
                             if error:
                                 pdf.set_text_color(255, 0, 0)  # Red for errors
+                                # Handle potential Unicode characters
+                                error = error.encode('latin-1', 'replace').decode('latin-1')
                                 pdf.multi_cell(0, 5, f"Error: {error}")
                                 pdf.set_text_color(0, 0, 0)  # Reset to black
                                 pdf.ln(5)
                 except Exception as e:
                     pdf.set_text_color(255, 0, 0)
-                    pdf.multi_cell(0, 5, f"Error reading log: {str(e)}")
+                    error_msg = str(e).encode('latin-1', 'replace').decode('latin-1')
+                    pdf.multi_cell(0, 5, f"Error reading log: {error_msg}")
                     pdf.set_text_color(0, 0, 0)
 
                 pdf.ln(10)
-                pdf.set_font("Arial", 'B', 12)
+                pdf.set_font("DejaVu", 'B', 12)
 
             # Save PDF
             pdf.output(file_path)
             QMessageBox.information(self, "Success", "PDF report generated successfully!")
 
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to generate PDF: {str(e)}")
+            error_msg = str(e).encode('latin-1', 'replace').decode('latin-1')
+            QMessageBox.critical(self, "Error", f"Failed to generate PDF: {error_msg}")

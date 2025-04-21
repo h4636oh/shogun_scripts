@@ -30,11 +30,11 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Shogun Scripts")
-        
+
         # Set window icon
         if os.path.exists(icon_path):
             self.setWindowIcon(QIcon(icon_path))
-        
+
         # Create stacked widget
         self.stacked_widget = QStackedWidget()
         self.setCentralWidget(self.stacked_widget)
@@ -46,15 +46,14 @@ class MainWindow(QMainWindow):
 def main():
     # Apply theme
     ThemeManager.apply_dark_theme(app)
-    
+
     # Setup style watcher
     stylesheet_path = os.path.join(os.path.dirname(__file__), "ui", "style.qss")
     watcher = StylesheetWatcher(app, stylesheet_path)
-    
-    # Rest of your application code...
+
     window = MainWindow()
     window.show()
-    
+
     sys.exit(app.exec())
 
 if __name__ == "__main__":
